@@ -2,7 +2,9 @@ const m$ = ({
   centsPerDollar = 100,
   decimals = 2,
   symbol = '$',
-  round = Math.round
+  round = Math.round,
+  symbolAfter = false,
+  symbolDelimiter = ''
 } = {}) => {
   function $ (dollars, {
     cents = round(dollars * centsPerDollar),
@@ -28,7 +30,11 @@ const m$ = ({
       subtract,
       constructor: $,
       toString () {
-        return `${ symbol }${ this.$.toFixed(decimals) }`;
+        if(symbolAfter) {
+          return `${ this.$.toFixed(decimals) }${ symbolDelimiter }${ symbol }`;
+        } else {
+          return `${ symbol }${ symbolDelimiter }${ this.$.toFixed(decimals) }`;
+        }
       }
     });
   }
@@ -41,9 +47,13 @@ const m$ = ({
 
 const $ = m$();
 const in$ = n => $.cents(n).$;
+const eur = m$({symbol: '€', symbolDelimiter: ' ', symbolAfter: true});
+const inEur = n => eur.cents(n).$;
 
 module.exports = {
   m$,
   $,
-  in$
+  in$,
+  eur,
+  inEur,
 };

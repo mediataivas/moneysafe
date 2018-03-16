@@ -1,5 +1,5 @@
 const test = require('tape');
-const { m$, $, in$ } = require('./moneysafe');
+const { m$, $, in$, eur, inEur } = require('./moneysafe');
 
 test('$(dollars)', assert => {
   const msg = 'should return money with .valueOf() in cents';
@@ -199,6 +199,39 @@ test('m$({ symbol: \'#\' })(x).toString()', assert => {
   assert.end();
 });
 
+test('m$({ symbol: \'#\', symbolDelimiter: \'@\' })(x).toString()', assert => {
+  const msg = 'should return string with custom currency symbol and delimeter';
+  const p = m$({ symbol: '#', symbolDelimiter: '@' });
+
+  const actual = p(10.10).toString();
+  const expected = '#@10.10';
+
+  assert.same(actual, expected, msg);
+  assert.end();
+});
+
+test('m$({ symbol: \'#\', symbolAfter: true })(x).toString()', assert => {
+  const msg = 'should return string with custom currency symbol after the amount';
+  const p = m$({ symbol: '#', symbolAfter: true });
+
+  const actual = p(10.10).toString();
+  const expected = '10.10#';
+
+  assert.same(actual, expected, msg);
+  assert.end();
+});
+
+test('m$({ symbol: \'#\', , symbolDelimiter: \'@\', symbolAfter: true })(x).toString()', assert => {
+  const msg = 'should return string with custom currency symbol after the amount';
+  const p = m$({ symbol: '#', symbolDelimiter: '@', symbolAfter: true });
+
+  const actual = p(10.10).toString();
+  const expected = '10.10@#';
+
+  assert.same(actual, expected, msg);
+  assert.end();
+});
+
 test('in$()', assert => {
   const msg = 'should convert cents to dollars';
 
@@ -208,3 +241,24 @@ test('in$()', assert => {
   assert.same(actual, expected, msg);
   assert.end();
 });
+
+test('eur()', assert => {
+  const msg = 'should return value in euros';
+
+  const actual = eur(10.10).toString();
+  const expected = '10.10 €';
+
+  assert.same(actual, expected, msg);
+  assert.end();
+});
+
+test('inEur()', assert => {
+  const msg = 'should convert cents to euros';
+
+  const actual = inEur(1010);
+  const expected = 10.10;
+
+  assert.same(actual, expected, msg);
+  assert.end();
+});
+
